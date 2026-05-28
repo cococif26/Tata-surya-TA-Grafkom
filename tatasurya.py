@@ -1,12 +1,9 @@
 from ursina import *
+from ursina.prefabs.first_person_controller import FirstPersonController
 from math import cos, sin, radians
 
-app = Ursina()
+app = Ursina(title='Tata Surya')
 window.color = color.black
-
-camera.position = (0, 30, -50)
-camera.rotation_x = 30
-
 
 matahari = Entity(
     model='sphere',
@@ -15,14 +12,15 @@ matahari = Entity(
 )
 
 # Cahaya
-PointLight(
-    parent=matahari,
-    y=2,
-    z=-3,
-    color=color.white
-)
-ambient_light = AmbientLight(color=color.white)
+PointLight(parent=matahari)
+AmbientLight(color=color.white)
 
+matahari.scale = 0.1
+matahari.animate_scale(
+    5,
+    duration=1,
+    curve=curve.out_bounce
+)
 
 data_planet = [
     ('Merkurius', 5, 0.5, color.gray, 80),
@@ -35,12 +33,11 @@ data_planet = [
     ('Neptunus', 26, 1.2, color.azure, 10)
 ]
 
-entitas_planet = []
+planets = []
 
-# buat garis orbit disetiap planet
-def garis_orbit(jarak):
+for nama, jarak, ukuran, warna, kecepatan in data_planet:
 
-    orbit = Entity(
+    Entity(
         model=Mesh(
             vertices=[
                 Vec3(
@@ -55,36 +52,39 @@ def garis_orbit(jarak):
         color=color.white
     )
 
-    return orbit
-
-
-for nama, jarak, skala, warna, kecepatan in data_planet:
-
-    orbit_parent = Entity()
+    orbit = Entity()
 
     planet = Entity(
-        parent=orbit_parent,
+        parent=orbit,
         model='sphere',
         color=warna,
-        texture='earth',
-        scale=skala,
+        scale=ukuran,
         position=(jarak, 0, 0),
-        name=nama
     )
 
-    garis_orbit(jarak)
+    planets.append((orbit, planet, kecepatan))
 
-    entitas_planet.append({
-        'orbit': orbit_parent,
-        'kecepatan': kecepatan
-    })
+    ground = Entity(
+        model='plane',
+        scale=(200,1,200),
+        collider='box',
+        visible=False
+    )
 
-# Animasi
+    player = FirstPersonController(
+        position=(0,2,-40),
+        kecepatan=10
+    )
+
+# Animasi 3D
 def update():
 
-    for planet in entitas_planet:
-        planet['orbit'].rotation_y += (
-            planet['kecepatan'] * time.dt
-        )
+    for orbit, planet, kecepatan in planets:
+
+        orbit.rotation_y += kecepatan * time.dt
+        planet.rotation_y += 40 * time.dt
+
+    player.x = clamp(player.x, -80, 80)
+    player.z = clamp(player.z, -80, 80)
 
 app.run()
