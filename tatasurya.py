@@ -2,19 +2,21 @@ from ursina import *
 from ursina.prefabs.first_person_controller import FirstPersonController
 from math import cos, sin, radians
 
+# P8 
 app = Ursina(title='Tata Surya')
 window.color = color.black
 
+# P7 Objek 3D part 2 
 matahari = Entity(
     model='sphere',
     color=color.orange,
     scale=5
 )
 
-# Cahaya
 PointLight(parent=matahari)
 AmbientLight(color=color.white)
 
+# P4
 matahari.scale = 0.1
 matahari.animate_scale(
     5,
@@ -35,8 +37,8 @@ data_planet = [
 
 planets = []
 
-for nama, jarak, ukuran, warna, kecepatan in data_planet:
-
+for nama, jarak, ukuran, warna, speed in data_planet:
+# P7
     Entity(
         model=Mesh(
             vertices=[
@@ -51,7 +53,7 @@ for nama, jarak, ukuran, warna, kecepatan in data_planet:
         ),
         color=color.white
     )
-
+# P8
     orbit = Entity()
 
     planet = Entity(
@@ -62,8 +64,8 @@ for nama, jarak, ukuran, warna, kecepatan in data_planet:
         position=(jarak, 0, 0),
     )
 
-    planets.append((orbit, planet, kecepatan))
-
+    planets.append((orbit, planet, speed))
+# P9
     ground = Entity(
         model='plane',
         scale=(200,1,200),
@@ -73,17 +75,17 @@ for nama, jarak, ukuran, warna, kecepatan in data_planet:
 
     player = FirstPersonController(
         position=(0,2,-40),
-        kecepatan=10
+        speed=10
     )
 
-# Animasi 3D
+# P8
 def update():
 
-    for orbit, planet, kecepatan in planets:
+    for orbit, planet, speed in planets:
 
-        orbit.rotation_y += kecepatan * time.dt
+        orbit.rotation_y += speed * time.dt
         planet.rotation_y += 40 * time.dt
-
+# P9
     player.x = clamp(player.x, -80, 80)
     player.z = clamp(player.z, -80, 80)
 
