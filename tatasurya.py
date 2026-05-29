@@ -6,6 +6,19 @@ from math import cos, sin, radians
 app = Ursina(title='Tata Surya')
 window.color = color.black
 
+#bintang - bintang di langit
+for i in range(100):
+    Entity(
+        model='sphere',
+        color=color.white,
+        scale= 0.3,
+        position=(
+            random.uniform(-100, 100),
+            random.uniform(-100, 100),
+            random.uniform(-100, 100)
+        )
+    )
+
 # P7 Objek 3D part 2 
 matahari = Entity(
     model='sphere',
