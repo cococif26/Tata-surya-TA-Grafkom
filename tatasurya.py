@@ -79,25 +79,25 @@ for nama, jarak, ukuran, warna, speed in data_planet:
 
     planets.append((orbit, planet, speed))
 # P9
-    ground = Entity(
-        model='plane',
-        scale=(200,1,200),
-        collider='box',
-        visible=False
-    )
+ground = Entity(
+    model='plane',
+    scale=(200,1,200),
+    collider='box',
+    visible=False
+)
 
-    player = FirstPersonController(
-        position=(0,2,-40),
-        speed=10
-    )
+player = FirstPersonController(
+    position=(0,2,-40),
+    speed=10
+)
 
 # P8
 def update():
 
     for orbit, planet, speed in planets:
 
-        orbit.rotation_y += speed * time.dt
-        planet.rotation_y += 40 * time.dt
+        orbit.rotation_y += speed * time.dt # ngelilingin matahari
+        planet.rotation_y += 40 * time.dt # muter tubuh planet nya
 # P9
     player.x = clamp(player.x, -80, 80)
     player.z = clamp(player.z, -80, 80)
